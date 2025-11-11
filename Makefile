@@ -4,14 +4,15 @@ SRCS = src/main.c
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
-CFLAG = -lreadline #-Wall -Wextra -Werror
+CFLAGS = #-Wall -Wextra -Werror
+READLINE = -lreadline
 LIBFT = libft/libft.a
 LIBFT_DIR = libft
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) $(READLINE)
 
 $(LIBFT):
 	make -C $(LIBFT_DIR) all
