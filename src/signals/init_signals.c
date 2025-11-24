@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 17:36:53 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/11/24 17:37:47 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/11/24 17:42:36 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_signals(void)
 {
-	struct	sigaction sa;
+	struct sigaction	sa;
 
 	sa.sa_flags = SA_SIGINFO;
 	sa.sa_sigaction = sig_handler;

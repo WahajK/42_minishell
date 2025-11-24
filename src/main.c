@@ -6,13 +6,11 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:14 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/11/24 17:39:22 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/11/24 17:40:35 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-
 
 int	main(void)
 {
