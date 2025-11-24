@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   clean_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/11 17:32:14 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/11/24 17:39:22 by muhakhan         ###   ########.fr       */
+/*   Created: 2025/11/24 17:39:01 by muhakhan          #+#    #+#             */
+/*   Updated: 2025/11/24 17:39:21 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-
-
-int	main(void)
+void	clean_exit(int stage, char *msg)
 {
-	init_signals();
-	parse_loop();
+	if (stage == 0)
+		printf("%s\n", msg);
 }

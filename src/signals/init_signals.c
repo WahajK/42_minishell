@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_signals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/11 17:32:14 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/11/24 17:39:22 by muhakhan         ###   ########.fr       */
+/*   Created: 2025/11/24 17:36:53 by muhakhan          #+#    #+#             */
+/*   Updated: 2025/11/24 17:37:47 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-
-
-int	main(void)
+void	init_signals(void)
 {
-	init_signals();
-	parse_loop();
+	struct	sigaction sa;
+
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = sig_handler;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGINT, &sa, NULL) == -1
+		|| sigaction(SIGQUIT, &sa, NULL) == -1)
+		clean_exit(0, "Sigaction error");
 }
