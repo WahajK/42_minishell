@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/11/11 20:50:16 by muhakhan         ###   ########.fr       */
+/*   Updated: 2025/11/24 17:37:52 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,33 @@
 # include <sys/stat.h>
 # include <dirent.h>
 # include <termios.h>
+
+typedef enum e_token_type
+{
+	TOK_EOF,
+	TOK_WORD,
+	TOK_PIPE,
+	TOK_AND,
+	TOK_SEMI_COL,
+	TOK_LT,
+	TOK_GT,
+	TOK_DGT,
+	TOK_DLT,
+	TOK_LPAREN,
+	TOK_RPAREN,
+	TOK_QUOTES,
+	TOK_UNKNOWN
+}	t_token_type;
+
+typedef struct s_token
+{
+	char			*token;
+	int				type;
+	struct s_token	*next;
+}	t_token;
+
+int		skip_whitespaces(char *input);
+t_token	*lexer(char *input);
+void	parse_loop(void);
+void	init_signals();
 #endif
