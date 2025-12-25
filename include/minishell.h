@@ -50,8 +50,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-int		skip_whitespaces(char *input);
+char	*skip_whitespaces(char *input);
+char	*get_next_line(int fd);
 t_token	*lexer(char *input);
 void	parse_loop(void);
-void	init_signals();
+void	init_signals(void);
+void	sig_handler(int signum, siginfo_t *info, void *context);
+void	clean_exit(int stage, char *msg);
+void	handle_sigquit(void *context);
+void	handle_sigint(void *context);
 #endif

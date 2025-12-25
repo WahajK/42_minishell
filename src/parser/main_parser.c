@@ -12,23 +12,23 @@
 
 #include "../../include/minishell.h"
 
-int	skip_whitespaces(char *input)
+char	*skip_whitespaces(char *input)
 {
 	while (*input == ' ')
 		input++;
 	return (input);
 }
 
-void	is_EOF(t_token *token_head, char *input)
+int	is_EOF(t_token *token_head, char *input)
 {
 	if (*input == EOF)
-	{
-		
-	}
+		return (1);
+	return (0);
 }
+
 int	is_operator(t_token *token_head, char *input)
 {
-	
+	return (0);
 }
 
 t_token	*lexer(char *input)
@@ -40,11 +40,12 @@ t_token	*lexer(char *input)
 	head = NULL;
 	while (input[i])
 	{
-		input = skip_whitespaces(input[i]);
-		if (is_operator(&head, input))
-			input = handle_opeartor(input[i]);
-		if (is_word(&head, input))
-			input = handle_word(input[i]);
+		input = skip_whitespaces(&input[i]);
+		// if (is_operator(&head, input))
+		// 	input = handle_opeartor(input[i]);
+		// if (is_word(&head, input))
+		// 	input = handle_word(input[i]);
+		i++;
 	}
 	return (head);
 }
