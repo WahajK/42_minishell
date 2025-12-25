@@ -107,5 +107,9 @@ void	free_shell_data(t_data *data);
 int		skip_whitespaces(char *input);
 t_token	*lexer(char *input);
 void	parse_loop(void);
-void	init_signals();
+void	init_signals(void);
+void	sig_handler(int signum, siginfo_t *info, void *context);
+void	clean_exit(int stage, char *msg);
+void	handle_sigquit(void *context);
+void	handle_sigint(void *context);
 #endif

@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRCS = src/main.c
+SRCS = src/main.c src/parser/main_parser.c src/signals/init_signals.c src/signals/sig_handlers.c src/utils/clean_exit.c src/get_next_line/get_next_line.c
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
@@ -26,6 +26,6 @@ clean:
 
 fclean: clean
 	rm -rf $(NAME)
-	make -c $(LIBFT_DIR) fclean
+	make -C $(LIBFT_DIR) fclean
 
 re: fclean all
