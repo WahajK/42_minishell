@@ -2,3 +2,4 @@
 *.a
 minishell
 .vscode/
+test.txt
