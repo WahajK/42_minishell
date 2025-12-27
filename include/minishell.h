@@ -12,6 +12,7 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# define HISTORY_FILE "test.txt"
 
 # include "../libft/libft.h"
 # include <stdio.h>
@@ -67,7 +68,7 @@ typedef struct s_command
     int             is_builtin;     // Flag (0 or 1) to indicate if the command is a shell builtin.
     int             exit_status;    // Field to store the exit status of this specific command after execution.
     //struct s_command *next;         // Pointer to the next command in the pipeline (for the '|' operator).
-} t_command;
+}	t_command;
 
 typedef struct s_env
 {
@@ -84,15 +85,15 @@ typedef struct s_data
     int             last_exit_code; // The value of $?
     char            *working_dir;   // Current working directory (optional, but useful)
     // Add other necessary state here later (e.g., signal handlers, etc.)
-} t_data;
+}	t_data;
 
 #define CWD_BUFFER_SIZE 1024
 
 // #builtins
 
-int	my_pwd(t_command *cmd);
-int builtin_env(t_command *cmd, t_data *data);
-int	builtin_exit(t_command *cmd, t_data *data);
+int		my_pwd(t_command *cmd);
+int		builtin_env(t_command *cmd, t_data *data);
+int		builtin_exit(t_command *cmd, t_data *data);
 
 
 // #env
@@ -100,13 +101,13 @@ t_env	*init_env(char **envp);
 char	*get_env_value(t_data *data, char *key);
 
 //#utils
-int	is_numeric(char *str);
+int		is_numeric(char *str);
 void	free_env_list(t_env *head);
 void	free_shell_data(t_data *data);
 
-int		skip_whitespaces(char *input);
+char	*skip_whitespaces(char *input);
 t_token	*lexer(char *input);
-void	parse_loop(void);
+int		parse_loop(void);
 void	init_signals(void);
 void	sig_handler(int signum, siginfo_t *info, void *context);
 void	clean_exit(int stage, char *msg);

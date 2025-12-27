@@ -12,55 +12,103 @@
 
 #include "../../include/minishell.h"
 
-char	*skip_whitespaces(char *input)
-{
-	while (*input == ' ')
-		input++;
-	return (input);
-}
+// t_token	*lexer(char *input)
+// {
+// 	int		i;
+// 	t_token	*head;
 
-int	is_EOF(t_token *token_head, char *input)
-{
-	if (*input == EOF)
-		return (1);
-	return (0);
-}
+// 	i = 0;
+// 	head = NULL;
+// 	while (input[i])
+// 	{
+// 		input = skip_whitespaces(&input[i]);
+// 		i++;
+// 	}
+// 	return (head);
+// }
 
-int	is_operator(t_token *token_head, char *input)
+static void	strip_newline(char *str)
 {
-	return (0);
-}
-
-t_token	*lexer(char *input)
-{
-	int		i;
-	t_token	*head;
-
-	i = 0;
-	head = NULL;
-	while (input[i])
+	if (!str)
+		return;
+	char *newline = str;
+	while (*newline)
 	{
-		input = skip_whitespaces(&input[i]);
-		// if (is_operator(&head, input))
-		// 	input = handle_opeartor(input[i]);
-		// if (is_word(&head, input))
-		// 	input = handle_word(input[i]);
-		i++;
+		if (*newline == '\n')
+		{
+			*newline = '\0';
+			return;
+		}
+		newline++;
 	}
-	return (head);
 }
 
-void	parse_loop(void)
+int	init_history(void)
+{
+	int		fd;
+	char	*line;
+
+	if (access(HISTORY_FILE, R_OK) != 0)
+		return (0);
+
+	fd = open(HISTORY_FILE, O_RDONLY);
+	if (fd < 0)
+		return (printf("minishell: could not open history file\n"), -1);
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break;
+		strip_newline(line);
+		if (*line)
+			add_history(line);
+		free(line);
+	}
+	close(fd);
+	return (0);
+}
+
+void	save_command_to_history(const char *command)
+{
+	int		fd;
+	size_t	len;
+
+	if (!command || *command == '\0')
+		return ;
+	fd = open(HISTORY_FILE, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd < 0)
+	{
+		printf("minishell: could not write to history file\n");
+		return ;
+	}
+	len = ft_strlen(command);
+	write(fd, command, len);
+	write(fd, "\n", 1);
+	close(fd);
+}
+
+int	parse_loop(void)
 {
 	char	*input;
 
+	if (init_history() != 0)
+		return (1);
 	while (1)
 	{
 		input = readline("minishell$ ");
-		printf("Input: %s\n", input);
-		lexer(input);
 		if (!input)
-			exit(0);
+		{
+			printf("exit\n");
+			break;
+		}
+		if (*input)
+		{
+			add_history(input);
+			save_command_to_history(input);
+		}
+		printf("You entered: %s\n", input);
 		free(input);
 	}
+	rl_clear_history();
+	return (0);
 }
