@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:58 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/04 16:17:15 by okhan            ###   ########.fr       */
+/*   Updated: 2025/12/28 17:33:07 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ t_env	*init_env(char **envp)
 		if (equal_sign)
 		{
 			key = strndup(envp[i], equal_sign - envp[i]);
-			t_env *new_node = ft_new_env_node(key, equal_sign + 1);
+			t_env *new_node;
+			
+			new_node = ft_new_env_node(key, equal_sign + 1);
 			free(key);
 			if (!new_node)
 			{

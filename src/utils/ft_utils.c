@@ -6,15 +6,25 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:45:44 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/04 16:17:38 by okhan            ###   ########.fr       */
+/*   Updated: 2025/12/28 16:32:11 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	ft_isdigit(int c)
+void    ft_free_split(char **split)
 {
-	return (c >= '0' && c <= '9');
+    int i;
+
+    if (!split)
+        return;
+    i = 0;
+    while (split[i])
+    {
+        free(split[i]);
+        i++;
+    }
+    free(split);
 }
 
 int	is_numeric(char *str)
