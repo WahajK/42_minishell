@@ -6,17 +6,17 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:43:38 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/04 16:16:03 by okhan            ###   ########.fr       */
+/*   Updated: 2025/12/28 18:36:48 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int builtin_env(t_command *cmd, t_data *data)
+int builtin_env(char **args, t_data *data)
 {
     t_env *current;
 
-    if (cmd->args[1] != NULL)
+    if (args[1] != NULL)
     {
         fprintf(stderr, "minishell: env: too many arguments\n");
         return (1);

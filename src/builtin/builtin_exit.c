@@ -6,7 +6,7 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:33 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/04 16:16:48 by okhan            ###   ########.fr       */
+/*   Updated: 2025/12/28 18:36:15 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ static long	ft_atol(char *str)
  * @param data The main shell data structure.
  * @return int Returns 1 if 'too many arguments' error occurs, otherwise exits.
  */
-int	builtin_exit(t_command *cmd, t_data *data)
+int	builtin_exit(char **args, t_data *data)
 {
 	int			arg_count;
 	long long	exit_code;
 
 	arg_count = 0;
-	while (cmd->args[arg_count])
+	while (args[arg_count])
 		arg_count++;
 
 	// Scenario 1: No arguments
@@ -66,9 +66,9 @@ int	builtin_exit(t_command *cmd, t_data *data)
 	}
 
 	// Scenario 2 & 3: Arguments provided
-	if (!is_numeric(cmd->args[1]))
+	if (!is_numeric(args[1]))
 	{
-		fprintf(stderr, "minishell: exit: %s: numeric argument required\n", cmd->args[1]);
+		fprintf(stderr, "minishell: exit: %s: numeric argument required\n", args[1]);
 		free_shell_data(data);
 		exit(255);
 	}
@@ -82,7 +82,7 @@ int	builtin_exit(t_command *cmd, t_data *data)
 
 	// Scenario 2: One valid numeric argument
 	// Use ft_atol (or strtol) for conversion
-	exit_code = ft_atol(cmd->args[1]); // Assuming ft_atol is in your libft
+	exit_code = ft_atol(args[1]); // Assuming ft_atol is in your libft
 	
 	free_shell_data(data);
 	// Exit status is the lower 8 bits (modulo 256)

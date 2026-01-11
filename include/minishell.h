@@ -6,7 +6,7 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/12/04 16:14:16 by okhan            ###   ########.fr       */
+/*   Updated: 2025/12/28 18:43:15 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ typedef struct s_data
 
 // #builtins
 
-int		my_pwd(t_command *cmd);
-int		builtin_env(t_command *cmd, t_data *data);
-int		builtin_exit(t_command *cmd, t_data *data);
+int		my_pwd(char **args);
+int		builtin_env(char **args, t_data *data);
+int		builtin_exit(char **args, t_data *data);
 
 
 // #env
@@ -104,6 +104,12 @@ char	*get_env_value(t_data *data, char *key);
 int		is_numeric(char *str);
 void	free_env_list(t_env *head);
 void	free_shell_data(t_data *data);
+void    ft_free_split(char **split);
+
+// #execution
+int	execute_builtin(char **args, t_data *data);
+char *find_commadnd_path(char *cmd, t_data *data);
+int	execute_external_command(char **args, char ** envp, t_data *data);
 
 char	*skip_whitespaces(char *input);
 t_token	*lexer(char *input);
