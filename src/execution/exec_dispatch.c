@@ -6,7 +6,7 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 15:01:57 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/28 18:37:43 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/23 18:09:10 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-
 int	execute_builtin(char **args, t_data *data)
 {
-	char *cmd;
+	char	*cmd;
+
 	cmd = args[0];
 	if (ft_strcmp(cmd, "pwd") == 0)
-		return(my_pwd(args));
+		return (my_pwd(args));
 }

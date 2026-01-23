@@ -6,7 +6,7 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:58 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/28 17:33:07 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/23 17:48:56 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,26 @@ static t_env	*ft_new_env_node(char *key, char *value)
 	return (new);
 }
 
+static	t_env	*create_node_from_env(char *env_str)
+{
+	char	*equal_sign;
+	char	*key;
+	t_env	*node;
+
+	equal_sign = ft_strchr(env_str, '=');
+	if (!equal_sign)
+		return (NULL);
+	key = ft_strndup(env_str, equal_sign - env_str);
+	node = ft_new_env_node(key, equal_sign + 1);
+	free(key);
+	return (node);
+}
+
 t_env	*init_env(char **envp)
 {
 	t_env	*head;
 	t_env	*current;
-	char	*equal_sign;
-	char	*key;
+	t_env	*node;
 	int		i;
 
 	head = NULL;
@@ -47,25 +61,17 @@ t_env	*init_env(char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		equal_sign = strchr(envp[i], '=');
-		if (equal_sign)
+		node = create_node_from_env(envp[i]);
+		if (!node)
 		{
-			key = strndup(envp[i], equal_sign - envp[i]);
-			t_env *new_node;
-			
-			new_node = ft_new_env_node(key, equal_sign + 1);
-			free(key);
-			if (!new_node)
-			{
-				free_env_list(head);
-				return (NULL);
-			}
-			if (!head)
-				head = new_node;
-			else
-				current->next = new_node;
-			current = new_node;
+			free_env_list(head);
+			return (NULL);
 		}
+		if (!head)
+			head = node;
+		else
+			current->next = node;
+		current = node;
 		i++;
 	}
 	return (head);
@@ -80,7 +86,7 @@ char	*get_env_value(t_data *data, char *key)
 	current = data->env_list;
 	while (current)
 	{
-		if (strcmp(current->key, key) == 0)
+		if (ft_strcmp(current->key, key) == 0)
 			return (current->value);
 		current = current->next;
 	}
