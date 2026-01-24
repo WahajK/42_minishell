@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sig_handlers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 17:38:17 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/17 22:37:25 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/24 22:35:43 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,3 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	else if (signum == SIGQUIT)
 		handle_sigquit(NULL);
 }
-
-

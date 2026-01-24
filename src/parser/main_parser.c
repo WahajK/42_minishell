@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 17:34:57 by muhakhan          #+#    #+#             */
-/*   Updated: 2025/11/24 18:06:05 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/24 22:35:29 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,17 @@
 
 static void	strip_newline(char *str)
 {
+	char	*newline;
+
 	if (!str)
-		return;
-	char *newline = str;
+		return ;
+	newline = str;
 	while (*newline)
 	{
 		if (*newline == '\n')
 		{
 			*newline = '\0';
-			return;
+			return ;
 		}
 		newline++;
 	}
@@ -50,7 +52,6 @@ int	init_history(void)
 
 	if (access(HISTORY_FILE, R_OK) != 0)
 		return (0);
-
 	fd = open(HISTORY_FILE, O_RDONLY);
 	if (fd < 0)
 		return (printf("minishell: could not open history file\n"), -1);
@@ -58,7 +59,7 @@ int	init_history(void)
 	{
 		line = get_next_line(fd);
 		if (!line)
-			break;
+			break ;
 		strip_newline(line);
 		if (*line)
 			add_history(line);
@@ -99,7 +100,7 @@ int	parse_loop(void)
 		if (!input)
 		{
 			printf("exit\n");
-			break;
+			break ;
 		}
 		if (*input)
 		{
