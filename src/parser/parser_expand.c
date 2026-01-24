@@ -1,37 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sig_handlers.c                                     :+:      :+:    :+:   */
+/*   parser_expand.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/24 17:38:17 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:49:30 by muhakhan         ###   ########.fr       */
+/*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
+/*   Updated: 2026/01/24 22:48:26 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	handle_sigint(void *context)
-{
-	(void)context;
-	printf("\nMeow");
-	return ;
-}
+/*
+ * This file is a placeholder for future variable expansion functionality.
+ * You will need to implement:
+ * 
+ * 1. Environment variable expansion ($VAR, $HOME, etc.)
+ * 2. Exit status expansion ($?)
+ * 3. Command substitution ($(command) or `command`)
+ * 4. Tilde expansion (~, ~/path)
+ * 
+ * For now, the parser handles raw strings without expansion.
+ */
 
-void	handle_sigquit(void *context)
+char	*expand_variables(char *str, t_data *data)
 {
-	(void)context;
-	printf("\nMeow");
-	return ;
-}
-
-void	sig_handler(int signum, siginfo_t *info, void *context)
-{
-	(void)context;
-	(void)info;
-	if (signum == SIGINT)
-		handle_sigint(NULL);
-	else if (signum == SIGQUIT)
-		handle_sigquit(NULL);
+	(void)data;
+	return (ft_strdup(str));
 }

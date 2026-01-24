@@ -1,6 +1,18 @@
 NAME = minishell
 
-SRCS = src/main.c src/parser/main_parser.c src/signals/init_signals.c src/signals/sig_handlers.c src/utils/clean_exit.c src/get_next_line/get_next_line.c
+SRCS = src/main.c \
+       src/parser/main_parser.c \
+       src/parser/lexer.c \
+       src/parser/parser.c \
+       src/parser/parser_command.c \
+       src/parser/parser_redirect.c \
+       src/parser/parser_utils.c \
+       src/signals/init_signals.c \
+       src/signals/sig_handlers.c \
+       src/utils/clean_exit.c \
+       src/utils/ft_utils.c \
+       src/get_next_line/get_next_line.c
+
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
