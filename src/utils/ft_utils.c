@@ -6,25 +6,25 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:45:44 by okhan             #+#    #+#             */
-/*   Updated: 2025/12/28 16:32:11 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/23 18:26:25 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void    ft_free_split(char **split)
+void	ft_free_split(char **split)
 {
-    int i;
+	int	i;
 
-    if (!split)
-        return;
-    i = 0;
-    while (split[i])
-    {
-        free(split[i]);
-        i++;
-    }
-    free(split);
+	if (!split)
+		return ;
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
 }
 
 int	is_numeric(char *str)
