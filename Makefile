@@ -2,6 +2,7 @@ NAME = minishell
 
 SRCS = src/main.c \
        src/parser/main_parser.c \
+       src/parser/save_history.c \
        src/parser/lexer.c \
        src/parser/parser.c \
        src/parser/parser_command.c \

@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 17:34:57 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 20:38:36 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:48:23 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,33 +66,6 @@ int	init_history(void)
 	read_history_lines(fd);
 	close(fd);
 	return (0);
-}
-
-void	save_command_to_history(const char *command)
-{
-	int		fd;
-	size_t	len;
-	char	*path;
-
-	if (!command || *command == '\0')
-		return ;
-	path = get_history_path();
-	if (!path)
-	{
-		printf("minishell: could not resolve history path\n");
-		return ;
-	}
-	fd = open(path, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	free(path);
-	if (fd < 0)
-	{
-		printf("minishell: could not write to history file\n");
-		return ;
-	}
-	len = ft_strlen(command);
-	write(fd, command, len);
-	write(fd, "\n", 1);
-	close(fd);
 }
 
 static void	process_input(char *input, t_data *data)
