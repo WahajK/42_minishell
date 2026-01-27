@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 18:25:00 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 18:54:56 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ typedef enum e_redir_type
 	REDIR_APPEND,
 	REDIR_HEREDOC
 }	t_redir_type;
+
+typedef struct s_pipe_ctx
+{
+	int		pipe_fds[2];
+	int		prev_fd;
+	char	**envp;
+}	t_pipe_ctx;
 
 typedef struct s_redir
 {

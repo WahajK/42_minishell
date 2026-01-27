@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:33 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 18:08:01 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 18:38:48 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,22 @@ static void	print_exit_numeric_error(char *arg)
 		"numeric argument required\n", arg);
 }
 
-int	builtin_exit(char **args, t_data *data)
+static int	get_arg_count(char **args)
 {
-	int		arg_count;
+	int	count;
+
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
+}
+
+static int	process_exit_args(int argc, char **args, t_data *data)
+{
 	long	exit_code;
 	int		error;
 
-	arg_count = 0;
-	while (args[arg_count])
-		arg_count++;
-	if (arg_count == 1)
+	if (argc == 1)
 	{
 		free_shell_data(data);
 		exit(data->last_exit_code);
@@ -39,11 +45,19 @@ int	builtin_exit(char **args, t_data *data)
 		free_shell_data(data);
 		exit(255);
 	}
-	if (arg_count > 2)
+	if (argc > 2)
 	{
 		fprintf(stderr, "minishell: exit: too many arguments\n");
 		return (1);
 	}
 	exit((int)(exit_code % 256));
 	return (0);
+}
+
+int	builtin_exit(char **args, t_data *data)
+{
+	int	argc;
+
+	argc = get_arg_count(args);
+	return (process_exit_args(argc, args, data));
 }
