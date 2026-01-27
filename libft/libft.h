@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 17:53:33 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/23 17:43:49 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 18:12:04 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
-char	*ft_strndup(const char *s, size_t n);
 char	**ft_split(char const *s, char c);
 char	*get_next_line(int fd);
 void	*ft_memset(void *s, int c, size_t n);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_dispatch.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 15:01:57 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 15:36:24 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 18:23:26 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,40 @@ int	execute_builtin(char **args, t_data *data)
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (builtin_exit(args, data));
 	return (1);
+}
+
+int	execute_command(t_command *cmd, t_data *data)
+{
+	char	**envp;
+	int		status;
+	int		saved_out;
+	int		saved_in;
+
+	if (!cmd || !cmd->args || !cmd->args[0])
+		return (0);
+	if (cmd->is_builtin)
+	{
+		saved_out = dup(STDOUT_FILENO);
+		saved_in = dup(STDIN_FILENO);
+		if (apply_redirections(cmd->redirs) == -1)
+		{
+			dup2(saved_out, STDOUT_FILENO);
+			dup2(saved_in, STDIN_FILENO);
+			close(saved_out);
+			close(saved_in);
+			return (1);
+		}
+		status = execute_builtin(cmd->args, data);
+		dup2(saved_out, STDOUT_FILENO);
+		dup2(saved_in, STDIN_FILENO);
+		close(saved_out);
+		close(saved_in);
+		cmd->exit_status = status;
+		return (status);
+	}
+	envp = env_list_to_envp(data->env_list);
+	status = execute_external_command(cmd->args, envp, data, cmd->redirs);
+	ft_free_split(envp);
+	cmd->exit_status = status;
+	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 17:34:57 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:48:42 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 18:08:31 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,27 +77,21 @@ static void	process_input(char *input, t_data *data)
 {
 	t_command	*commands;
 
-	(void)data;
 	commands = parse_input(input);
 	if (!commands)
 		return ;
-	printf("Parsed successfully!\n");
-	printf("Command: %s\n", commands->args[0]);
-	if (commands->args[1])
-		printf("Arg1: %s\n", commands->args[1]);
-	if (commands->redirs)
-		printf("Has redirections\n");
 	if (commands->next)
-		printf("Has pipeline\n");
+		execute_pipeline(commands, data);
+	else
+		execute_command(commands, data);
+	data->last_exit_code = commands->exit_status;
 	free_command_list(commands);
 }
 
-int	parse_loop(void)
+int	parse_loop(t_data *data)
 {
 	char	*input;
-	t_data	data;
 
-	ft_memset(&data, 0, sizeof(t_data));
 	if (init_history() != 0)
 		return (1);
 	while (1)
@@ -112,7 +106,7 @@ int	parse_loop(void)
 		{
 			add_history(input);
 			save_command_to_history(input);
-			process_input(input, &data);
+			process_input(input, data);
 		}
 		free(input);
 	}

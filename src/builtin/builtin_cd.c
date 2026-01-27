@@ -3,31 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 22:01:31 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/26 22:02:11 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 18:24:19 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static	void	update_env(t_data *data, char *key, char *value)
-{
-	t_env	*curr;
-
-	curr = data->env_list;
-	while (curr)
-	{
-		if (ft_strcmp(curr->key, key) == 0)
-		{
-			free(curr->value);
-			curr->value = ft_strdup(value);
-			return ;
-		}
-		curr = curr->next;
-	}
-}
 
 int	builtin_cd(char **args, t_data *data)
 {

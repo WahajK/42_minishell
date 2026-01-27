@@ -3,20 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   execution_pipeline.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:06:25 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/26 21:45:46 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 18:15:40 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
 static void	child_worker(t_command *cmd,
-	t_data *data, int pipe_fds[2], int prev_fd)
+	t_data *data, int pipe_fds[2], int prev_fd, char **envp)
 {
 	char	*path;
-	char	**envp;
 
 	if (prev_fd != -1)
 	{
@@ -31,13 +30,11 @@ static void	child_worker(t_command *cmd,
 	}
 	if (apply_redirections(cmd->redirs) == -1)
 		exit(1);
-	path = find_commadnd_path(cmd->args[0], data);
+	path = find_command_path(cmd->args[0], data);
 	if (!path)
 		exit(127);
-	envp = env_list_to_envp(data->env_list);
 	execve(path, cmd->args, envp);
 	perror("execve");
-	ft_free_split(envp);
 	free(path);
 	exit(1);
 }
@@ -48,17 +45,21 @@ void	execute_pipeline(t_command *cmds, t_data *data)
 	int		pipe_fds[2];
 	int		prev_fd;
 	pid_t	pid;
+	char	**envp;
 
+	envp = env_list_to_envp(data->env_list);
+	if (!envp)
+		return ;
 	prev_fd = -1;
 	while (cmds)
 	{
 		if (cmds->next && pipe(pipe_fds) == -1)
-			return (perror("pipe"));
+			return (perror("pipe"), ft_free_split(envp));
 		pid = fork();
 		if (pid == -1)
-			return (perror("fork"));
+			return (perror("fork"), ft_free_split(envp));
 		if (pid == 0)
-			child_worker(cmds, data, pipe_fds, prev_fd);
+			child_worker(cmds, data, pipe_fds, prev_fd, envp);
 		if (prev_fd != -1)
 			close(prev_fd);
 		if (cmds->next)
@@ -68,6 +69,7 @@ void	execute_pipeline(t_command *cmds, t_data *data)
 		}
 		cmds = cmds->next;
 	}
+	ft_free_split(envp);
 	while (wait(NULL) > 0)
 		;
 }

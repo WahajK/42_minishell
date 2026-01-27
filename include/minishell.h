@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 17:32:07 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 18:25:00 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,20 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef enum e_redir_type
+{
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC
+}	t_redir_type;
+
+typedef struct s_redir
+{
+	char			*file;
+	t_redir_type	type;
+	struct s_redir	*next;
+}	t_redir;
 
 // ====================================================================
 // 2. COMMAND STRUCTURE (The core contract between Parser and Executor)
@@ -80,39 +94,48 @@ typedef struct s_env
 
 typedef struct s_data
 {
-    t_env           *env_list;      // The head of your custom environment linked list
-    char            *user_input;    // The raw line read from readline
-    int             last_exit_code; // The value of $?
-    char            *working_dir;   // Current working directory (optional, but useful)
-    // Add other necessary state here later (e.g., signal handlers, etc.)
+	t_env			*env_list;
+	char			*user_input;
+	int				last_exit_code;
+	char			*working_dir;
 }	t_data;
 
-int		my_pwd(char **args);
-int		builtin_env(char **args, t_data *data);
-int		builtin_exit(char **args, t_data *data);
-
-
-// #env
-t_env	*init_env(char **envp);
-char	*get_env_value(t_data *data, char *key);
-
-//#utils
-int		is_numeric(char *str);
-void	free_env_list(t_env *head);
-void	free_shell_data(t_data *data);
-void    ft_free_split(char **split);
-
-// #execution
-int	execute_builtin(char **args, t_data *data);
-char *find_commadnd_path(char *cmd, t_data *data);
-int	execute_external_command(char **args, char ** envp, t_data *data);
-
-char	*skip_whitespaces(char *input);
-t_token	*lexer(char *input);
-int		parse_loop(void);
-void	init_signals(void);
-void	sig_handler(int signum, siginfo_t *info, void *context);
-void	clean_exit(int stage, char *msg);
-void	handle_sigquit(void *context);
-void	handle_sigint(void *context);
+int			my_pwd(char **args);
+int			builtin_echo(char **args);
+int			builtin_cd(char **args, t_data *data);
+int			builtin_env(char **args, t_data *data);
+int			builtin_exit(char **args, t_data *data);
+int			builtin_export(char **args, t_data *data);
+int			builtin_unset(char **args, t_data *data);
+t_env		*init_env(char **envp);
+char		*get_env_value(t_data *data, char *key);
+void		update_env(t_data *data, char *key, char *value);
+char		**env_list_to_envp(t_env *env_list);
+int			is_numeric(char *str);
+void		free_env_list(t_env *head);
+void		free_shell_data(t_data *data);
+void		ft_free_split(char **split);
+int			execute_builtin(char **args, t_data *data);
+int			execute_command(t_command *cmd, t_data *data);
+void		execute_pipeline(t_command *commands, t_data *data);
+int			apply_redirections(t_redir *redirs);
+char		*find_command_path(char *cmd, t_data *data);
+int			execute_external_command(char **args, char **envp, t_data *data,
+				t_redir *redirs);
+char		*ft_strndup(const char *s, size_t n);
+char		*skip_whitespaces(char *input);
+t_token		*lexer(char *input);
+int			parse_loop(t_data *data);
+t_command	*parse_input(char *input);
+t_command	*parse_simple_command(t_token **tokens);
+t_redir		*parse_redirections(t_token **tokens);
+int			check_syntax_errors(t_token *tokens);
+char		*remove_quotes(char *str);
+void		free_token_list(t_token *head);
+void		free_redir_list(t_redir *head);
+void		free_command(t_command *cmd);
+void		free_command_list(t_command *head);
+void		init_signals(void);
+void		handle_sigint(int sig);
+void		clean_exit(int stage, char *msg);
 #endif
