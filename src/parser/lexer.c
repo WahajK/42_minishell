@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:55:20 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:26:47 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,20 +86,40 @@ static char	*extract_quoted_word(char *input, int *len)
 	return (word);
 }
 
+static int	should_end_word(char c)
+{
+	return (is_operator(c) || c == ' ' || c == '\t' || c == '\'' || c == '"');
+}
+
+static int	process_word_char(char *input, int *i, char *word, int *j)
+{
+	if (input[*i] == '\\' && input[*i + 1])
+	{
+		word[(*j)++] = input[*i + 1];
+		*i += 2;
+		return (1);
+	}
+	if (should_end_word(input[*i]))
+		return (0);
+	word[(*j)++] = input[(*i)++];
+	return (1);
+}
+
 static char	*extract_word(char *input, int *len)
 {
 	int		i;
+	int		j;
 	char	*word;
 
 	i = 0;
-	while (input[i] && !is_operator(input[i]) && input[i] != ' '
-		&& input[i] != '\t' && input[i] != '\'' && input[i] != '"')
-		i++;
-	*len = i;
-	word = malloc(sizeof(char) * (i + 1));
+	j = 0;
+	word = malloc(sizeof(char) * (ft_strlen(input) + 1));
 	if (!word)
 		return (NULL);
-	ft_strlcpy(word, input, i + 1);
+	while (input[i] && process_word_char(input, &i, word, &j))
+		;
+	word[j] = '\0';
+	*len = i;
 	return (word);
 }
 

@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:06:25 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 18:53:56 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:35:26 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static int	init_pipeline_ctx(t_pipe_ctx *ctx, t_data *data)
 	if (!ctx->envp)
 		return (-1);
 	ctx->prev_fd = -1;
+	ctx->last_pid = -1;
 	return (0);
 }
 
@@ -64,12 +65,13 @@ static int	run_pipeline_loop(t_command *cmds, t_data *data, t_pipe_ctx *ctx)
 	while (cmds)
 	{
 		if (cmds->next && pipe(ctx->pipe_fds) == -1)
-			return (perror("pipe"), ft_free_split(ctx->envp), -1);
+			return (perror("pipe"), 1);
 		pid = fork();
 		if (pid == -1)
-			return (perror("fork"), ft_free_split(ctx->envp), -1);
+			return (perror("fork"), 1);
 		if (pid == 0)
 			child_worker(cmds, data, ctx);
+		ctx->last_pid = pid;
 		if (ctx->prev_fd != -1)
 			close(ctx->prev_fd);
 		if (cmds->next)
@@ -82,15 +84,31 @@ static int	run_pipeline_loop(t_command *cmds, t_data *data, t_pipe_ctx *ctx)
 	return (0);
 }
 
-void	execute_pipeline(t_command *cmds, t_data *data)
+int	execute_pipeline(t_command *cmds, t_data *data)
 {
 	t_pipe_ctx	ctx;
+	int			status;
+	int			last_status;
+	pid_t		pid;
 
 	if (init_pipeline_ctx(&ctx, data) == -1)
-		return ;
-	if (run_pipeline_loop(cmds, data, &ctx) == -1)
-		return ;
+		return (1);
+	if (run_pipeline_loop(cmds, data, &ctx) != 0)
+		return (ft_free_split(ctx.envp), 1);
 	ft_free_split(ctx.envp);
-	while (wait(NULL) > 0)
-		;
+	last_status = 0;
+	pid = wait(&status);
+	while (pid > 0)
+	{
+		if (pid == ctx.last_pid)
+		{
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				last_status = 128 + WTERMSIG(status);
+		}
+		pid = wait(&status);
+	}
+	data->last_exit_code = last_status;
+	return (last_status);
 }

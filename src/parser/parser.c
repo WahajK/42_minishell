@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:56:04 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:39:32 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	add_command_to_list(t_command **head, t_command *new_cmd)
 	curr->next = new_cmd;
 }
 
-static t_command	*parse_pipeline(t_token **tokens)
+static t_command	*parse_pipeline(t_token **tokens, t_data *data)
 {
 	t_command	*head;
 	t_command	*cmd;
@@ -35,7 +35,7 @@ static t_command	*parse_pipeline(t_token **tokens)
 	head = NULL;
 	while (*tokens && (*tokens)->type != TOK_EOF)
 	{
-		cmd = parse_simple_command(tokens);
+		cmd = parse_simple_command(tokens, data);
 		if (!cmd)
 			return (free_command_list(head), NULL);
 		add_command_to_list(&head, cmd);
@@ -55,45 +55,72 @@ static t_command	*parse_pipeline(t_token **tokens)
 	return (head);
 }
 
-t_command	*parse_input(char *input)
+int	parse_input(char *input, t_data *data, t_command **out)
 {
 	t_token		*tokens;
+	t_token		*token_head;
 	t_command	*commands;
 
 	if (!input || !*input)
-		return (NULL);
+	{
+		*out = NULL;
+		return (0);
+	}
 	tokens = lexer(input);
 	if (!tokens)
-		return (NULL);
-	commands = parse_pipeline(&tokens);
-	free_token_list(tokens);
-	return (commands);
+		return (1);
+	token_head = tokens;
+	if (check_syntax_errors(tokens))
+	{
+		free_token_list(token_head);
+		return (1);
+	}
+	commands = parse_pipeline(&tokens, data);
+	free_token_list(token_head);
+	if (!commands)
+		return (1);
+	*out = commands;
+	return (0);
+}
+
+static int	validate_token(t_token *curr)
+{
+	if (curr->type == TOK_PIPE)
+	{
+		if (!curr->next || curr->next->type == TOK_PIPE)
+		{
+			printf("minishell: syntax error near unexpected token `|'\n");
+			return (1);
+		}
+	}
+	if (curr->type == TOK_LT || curr->type == TOK_GT
+		|| curr->type == TOK_DGT || curr->type == TOK_DLT)
+	{
+		if (!curr->next || curr->next->type != TOK_WORD)
+		{
+			printf("minishell: syntax error near unexpected token\n");
+			return (1);
+		}
+	}
+	return (0);
 }
 
 int	check_syntax_errors(t_token *tokens)
 {
 	t_token	*curr;
 
+	if (!tokens)
+		return (0);
+	if (tokens->type == TOK_PIPE)
+	{
+		printf("minishell: syntax error near unexpected token `|'\n");
+		return (1);
+	}
 	curr = tokens;
 	while (curr)
 	{
-		if (curr->type == TOK_PIPE)
-		{
-			if (!curr->next || curr->next->type == TOK_PIPE)
-			{
-				printf("minishell: syntax error near unexpected token `|'\n");
-				return (1);
-			}
-		}
-		if (curr->type == TOK_LT || curr->type == TOK_GT
-			|| curr->type == TOK_DGT || curr->type == TOK_DLT)
-		{
-			if (!curr->next || curr->next->type != TOK_WORD)
-			{
-				printf("minishell: syntax error near unexpected token\n");
-				return (1);
-			}
-		}
+		if (validate_token(curr))
+			return (1);
 		curr = curr->next;
 	}
 	return (0);

@@ -6,13 +6,13 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 18:54:56 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:38:36 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define HISTORY_FILE "test.txt"
+# define HISTORY_FILE ".minishell_history"
 # define CWD_BUFFER_SIZE 1024
 
 # include "../libft/libft.h"
@@ -69,12 +69,14 @@ typedef struct s_pipe_ctx
 	int		pipe_fds[2];
 	int		prev_fd;
 	char	**envp;
+	pid_t	last_pid;
 }	t_pipe_ctx;
 
 typedef struct s_redir
 {
 	char			*file;
 	t_redir_type	type;
+	int				expand;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -105,6 +107,7 @@ typedef struct s_data
 	char			*user_input;
 	int				last_exit_code;
 	char			*working_dir;
+	t_command		*current_commands;
 }	t_data;
 
 int			my_pwd(char **args);
@@ -124,7 +127,7 @@ void		free_shell_data(t_data *data);
 void		ft_free_split(char **split);
 int			execute_builtin(char **args, t_data *data);
 int			execute_command(t_command *cmd, t_data *data);
-void		execute_pipeline(t_command *commands, t_data *data);
+int			execute_pipeline(t_command *commands, t_data *data);
 int			apply_redirections(t_redir *redirs);
 char		*find_command_path(char *cmd, t_data *data);
 int			execute_external_command(char **args, char **envp, t_data *data,
@@ -133,15 +136,18 @@ char		*ft_strndup(const char *s, size_t n);
 char		*skip_whitespaces(char *input);
 t_token		*lexer(char *input);
 int			parse_loop(t_data *data);
-t_command	*parse_input(char *input);
-t_command	*parse_simple_command(t_token **tokens);
+int			parse_input(char *input, t_data *data, t_command **out);
+t_command	*parse_simple_command(t_token **tokens, t_data *data);
 t_redir		*parse_redirections(t_token **tokens);
 int			check_syntax_errors(t_token *tokens);
 char		*remove_quotes(char *str);
+char		*expand_variables(char *str, t_data *data);
 void		free_token_list(t_token *head);
 void		free_redir_list(t_redir *head);
 void		free_command(t_command *cmd);
 void		free_command_list(t_command *head);
+void		prepare_heredocs(t_command *cmds, t_data *data);
+void		cleanup_heredocs(t_command *cmds);
 void		init_signals(void);
 void		handle_sigint(int sig);
 void		clean_exit(int stage, char *msg);
