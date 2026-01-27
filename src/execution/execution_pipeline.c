@@ -6,13 +6,13 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:06:25 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 18:18:09 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/26 21:45:46 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static	void	child_worker(t_command *cmd,
+static void	child_worker(t_command *cmd,
 	t_data *data, int pipe_fds[2], int prev_fd)
 {
 	char	*path;
@@ -34,11 +34,14 @@ static	void	child_worker(t_command *cmd,
 	path = find_commadnd_path(cmd->args[0], data);
 	if (!path)
 		exit(127);
-	envp = NULL;
+	envp = env_list_to_envp(data->env_list);
 	execve(path, cmd->args, envp);
 	perror("execve");
+	ft_free_split(envp);
+	free(path);
 	exit(1);
 }
+
 
 void	execute_pipeline(t_command *cmds, t_data *data)
 {

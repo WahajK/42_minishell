@@ -6,7 +6,7 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:58 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 17:48:56 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/26 22:36:50 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,14 @@ char	*get_env_value(t_data *data, char *key)
 		current = current->next;
 	}
 	return (NULL);
+}
+
+void	init_shell_data(t_data *data, char **envp)
+{
+	data->env_list = init_env(envp);
+	data->user_input = NULL;
+	data->last_exit_code = 0;
+	data->working_dir = getcwd(NULL, CWD_BUFFER_SIZE);
+	if (!data->working_dir)
+		clean_exit(1, "getcwd failed");
 }

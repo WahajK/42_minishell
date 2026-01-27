@@ -6,35 +6,23 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:17:10 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 18:23:09 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/24 18:12:39 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-#include "../../include/minishell.h"
-
-static int	open_redir_file(t_redir *redir, int *target_fd)
+static int	get_redir_fd(t_redir *redir)
 {
 	int	fd;
 
-	if (redir->type == TOK_LT)
-	{
+	fd = -1;
+	if (redir->type == TOK_LT || redir->type == TOK_DLT)
 		fd = open(redir->file, O_RDONLY);
-		*target_fd = STDIN_FILENO;
-	}
 	else if (redir->type == TOK_GT)
-	{
 		fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		*target_fd = STDOUT_FILENO;
-	}
 	else if (redir->type == TOK_DGT)
-	{
 		fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		*target_fd = STDOUT_FILENO;
-	}
-	else
-		fd = -1;
 	return (fd);
 }
 
@@ -45,9 +33,16 @@ int	apply_redirections(t_redir *redirs)
 
 	while (redirs)
 	{
-		fd = open_redir_file(redirs, &target_fd);
+		fd = get_redir_fd(redirs);
 		if (fd < 0)
-			return (perror(redirs->file), -1);
+		{
+			perror(redirs->file);
+			return (-1);
+		}
+		if (redirs->type == TOK_LT || redirs->type == TOK_DLT)
+			target_fd = STDIN_FILENO;
+		else
+			target_fd = STDOUT_FILENO;
 		if (dup2(fd, target_fd) < 0)
 			return (close(fd), -1);
 		close(fd);
