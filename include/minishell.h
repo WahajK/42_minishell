@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 20:38:36 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:31:51 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,4 +151,6 @@ void		cleanup_heredocs(t_command *cmds);
 void		init_signals(void);
 void		handle_sigint(int sig);
 void		clean_exit(int stage, char *msg);
+char		*get_history_path(void);
+void		save_command_to_history(const char *command);
 #endif

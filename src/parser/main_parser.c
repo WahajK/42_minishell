@@ -6,13 +6,13 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 17:34:57 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 20:48:23 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:30:57 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static char	*get_history_path(void)
+char	*get_history_path(void)
 {
 	char	*home;
 	char	*tmp;
