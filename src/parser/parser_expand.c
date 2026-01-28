@@ -6,37 +6,11 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/27 20:24:24 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:53:30 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static int	append_str(char **result, const char *add)
-{
-	char		*tmp;
-	const char	*suffix;
-
-	if (add)
-		suffix = add;
-	else
-		suffix = "";
-	tmp = ft_strjoin(*result, suffix);
-	if (!tmp)
-		return (0);
-	free(*result);
-	*result = tmp;
-	return (1);
-}
-
-static int	append_char(char **result, char c)
-{
-	char	buf[2];
-
-	buf[0] = c;
-	buf[1] = '\0';
-	return (append_str(result, buf));
-}
 
 static int	handle_exit_code(char **res, int code)
 {

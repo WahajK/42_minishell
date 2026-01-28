@@ -6,33 +6,33 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 22:02:27 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 20:31:15 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:42:50 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static void	add_env_node(t_data *data, char *key, char *value)
-{
-	t_env	*new;
-	t_env	*curr;
+// static void	add_env_node(t_data *data, char *key, char *value)
+// {
+// 	t_env	*new;
+// 	t_env	*curr;
 
-	new = malloc(sizeof(t_env));
-	if (!new)
-		return ;
-	new->key = ft_strdup(key);
-	new->value = ft_strdup(value);
-	new->next = NULL;
-	if (!data->env_list)
-		data->env_list = new;
-	else
-	{
-		curr = data->env_list;
-		while (curr->next)
-			curr = curr->next;
-		curr->next = new;
-	}
-}
+// 	new = malloc(sizeof(t_env));
+// 	if (!new)
+// 		return ;
+// 	new->key = ft_strdup(key);
+// 	new->value = ft_strdup(value);
+// 	new->next = NULL;
+// 	if (!data->env_list)
+// 		data->env_list = new;
+// 	else
+// 	{
+// 		curr = data->env_list;
+// 		while (curr->next)
+// 			curr = curr->next;
+// 		curr->next = new;
+// 	}
+// }
 
 static char	*resolve_export_value(char *arg, char *next, int *skip_next)
 {

@@ -6,26 +6,11 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:06:25 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 20:35:26 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:46:02 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static void	setup_child_fds(t_command *cmd, t_pipe_ctx *ctx)
-{
-	if (ctx->prev_fd != -1)
-	{
-		dup2(ctx->prev_fd, STDIN_FILENO);
-		close(ctx->prev_fd);
-	}
-	if (cmd->next)
-	{
-		close(ctx->pipe_fds[0]);
-		dup2(ctx->pipe_fds[1], STDOUT_FILENO);
-		close(ctx->pipe_fds[1]);
-	}
-}
 
 static void	exec_child_command(t_command *cmd, t_data *data, t_pipe_ctx *ctx)
 {

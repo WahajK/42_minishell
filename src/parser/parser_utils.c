@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:45:24 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:47:43 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,41 +66,4 @@ char	*skip_whitespaces(char *input)
 	while (*input && (*input == ' ' || *input == '\t'))
 		input++;
 	return (input);
-}
-
-int	count_args(t_token *tokens)
-{
-	int	count;
-
-	count = 0;
-	while (tokens && tokens->type == TOK_WORD)
-	{
-		count++;
-		tokens = tokens->next;
-	}
-	return (count);
-}
-
-char	*remove_quotes(char *str)
-{
-	char	*result;
-	char	quote;
-	int		i;
-	int		j;
-
-	if (!str || (str[0] != '\'' && str[0] != '"'))
-		return (ft_strdup(str));
-	quote = str[0];
-	i = 1;
-	j = 0;
-	while (str[i] && str[i] != quote)
-		i++;
-	result = malloc(sizeof(char) * i);
-	if (!result)
-		return (NULL);
-	i = 1;
-	while (str[i] && str[i] != quote)
-		result[j++] = str[i++];
-	result[j] = '\0';
-	return (result);
 }

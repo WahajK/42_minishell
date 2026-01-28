@@ -6,33 +6,11 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:58 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 18:08:19 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 16:48:48 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-static t_env	*ft_new_env_node(char *key, char *value)
-{
-	t_env	*new;
-
-	new = (t_env *)malloc(sizeof(t_env));
-	if (!new)
-		return (NULL);
-	new->key = strdup(key);
-	new->value = strdup(value);
-	new->next = NULL;
-	if (!new->key || !new->value)
-	{
-		if (new->key)
-			free(new->key);
-		if (new->value)
-			free(new->value);
-		free(new);
-		return (NULL);
-	}
-	return (new);
-}
 
 static	t_env	*create_node_from_env(char *env_str)
 {

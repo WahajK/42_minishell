@@ -8,7 +8,10 @@ SRCS = src/main.c \
        src/parser/parser_command.c \
        src/parser/parser_redirect.c \
        src/parser/parser_utils.c \
+	   src/parser/parser_utils2.c \
+	   src/parser/parser_utils3.c \
        src/parser/parser_expand.c \
+	   src/parser/lexer_helper_methods.c \
        src/builtin/builtin_cd.c \
        src/builtin/builtin_echo.c \
        src/builtin/builtin_env.c \
@@ -17,6 +20,7 @@ SRCS = src/main.c \
        src/builtin/builtin_pwd.c \
        src/builtin/builtin_unset.c \
        src/env/env_init.c \
+	   src/env/env_utils.c \
        src/execution/exec_dispatch.c \
        src/execution/execution_envp.c \
        src/execution/execution_path.c \
@@ -24,15 +28,16 @@ SRCS = src/main.c \
        src/execution/execution_process.c \
        src/execution/execution_redir.c \
        src/execution/heredoc.c \
+	   src/execution/execution_helper.c \
        src/signals/signal.c \
        src/utils/clean_exit.c \
        src/utils/ft_utils.c \
-       src/get_next_line/get_next_line.c
+       src/get_next_line/get_next_line.c \
 
 OBJS = $(SRCS:.c=.o)
 
 CC = cc
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 READLINE = -lreadline
 LIBFT = libft/libft.a
 LIBFT_DIR = libft
