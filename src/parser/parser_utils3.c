@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:27 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:29:23 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 17:57:27 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,6 @@ int	is_builtin_cmd(char *cmd)
 	if (ft_strcmp(cmd, "exit") == 0)
 		return (1);
 	return (0);
-}
-
-static int	is_real_word_end(char c)
-{
-	return (is_operator(c) || c == ' ' || c == '\t');
-}
-
-static void	process_quoted_in_word(char *input, int *i, char *word, int *j)
-{
-	char	quote;
-
-	quote = input[*i];
-	(*i)++;
-	while (input[*i] && input[*i] != quote)
-		word[(*j)++] = input[(*i)++];
-	if (input[*i] == quote)
-		(*i)++;
 }
 
 static void	process_backslash_in_word(char *input, int *i, char *word, int *j)

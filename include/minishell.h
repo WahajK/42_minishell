@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:04:24 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 17:58:03 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,8 @@ t_command		*parse_simple_command(t_token **tokens, t_data *data);
 t_redir			*parse_redirections(t_token **tokens);
 int				check_syntax_errors(t_token *tokens);
 char			*remove_quotes(char *str);
+int				is_real_word_end(char c);
+void			process_quoted_in_word(char *input, int *i, char *word, int *j);
 char			*expand_variables(char *str, t_data *data);
 void			free_token_list(t_token *head);
 void			free_redir_list(t_redir *head);
