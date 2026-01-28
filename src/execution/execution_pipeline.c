@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/18 15:06:25 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/28 16:46:02 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 21:19:15 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static void	child_worker(t_command *cmd, t_data *data, t_pipe_ctx *ctx)
 	setup_child_fds(cmd, ctx);
 	if (apply_redirections(cmd->redirs) == -1)
 		exit(1);
+	if (!cmd->args || !cmd->args[0])
+		exit(0);
 	exec_child_command(cmd, data, ctx);
 }
 
