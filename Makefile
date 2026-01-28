@@ -2,13 +2,29 @@ NAME = minishell
 
 SRCS = src/main.c \
        src/parser/main_parser.c \
+       src/parser/save_history.c \
        src/parser/lexer.c \
        src/parser/parser.c \
        src/parser/parser_command.c \
        src/parser/parser_redirect.c \
        src/parser/parser_utils.c \
-       src/signals/init_signals.c \
-       src/signals/sig_handlers.c \
+       src/parser/parser_expand.c \
+       src/builtin/builtin_cd.c \
+       src/builtin/builtin_echo.c \
+       src/builtin/builtin_env.c \
+       src/builtin/builtin_exit.c \
+       src/builtin/builtin_export.c \
+       src/builtin/builtin_pwd.c \
+       src/builtin/builtin_unset.c \
+       src/env/env_init.c \
+       src/execution/exec_dispatch.c \
+       src/execution/execution_envp.c \
+       src/execution/execution_path.c \
+       src/execution/execution_pipeline.c \
+       src/execution/execution_process.c \
+       src/execution/execution_redir.c \
+       src/execution/heredoc.c \
+       src/signals/signal.c \
        src/utils/clean_exit.c \
        src/utils/ft_utils.c \
        src/get_next_line/get_next_line.c

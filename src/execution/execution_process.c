@@ -3,17 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   execution_process.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 14:48:04 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 18:19:57 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 20:34:14 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static	void	child_process_exec(char *path, char **args, char **envp)
+static	void	child_process_exec(char *path, char **args, char **envp,
+	t_redir *redirs)
 {
+	if (apply_redirections(redirs) == -1)
+		exit(1);
 	execve(path, args, envp);
 	ft_putstr_fd("minishell: command not found: ", 2);
 	ft_putstr_fd(args[0], 2);
@@ -21,15 +24,12 @@ static	void	child_process_exec(char *path, char **args, char **envp)
 	exit(127);
 }
 
-int	execute_external_command(char **args, char **envp, t_data *data)
+static int	fork_and_execute(char *path, char **args, char **envp,
+	t_redir *redirs)
 {
 	pid_t	pid;
 	int		status;
-	char	*path;
 
-	path = find_commadnd_path(args[0], data);
-	if (!path)
-		return (127);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -38,10 +38,26 @@ int	execute_external_command(char **args, char **envp, t_data *data)
 		return (1);
 	}
 	if (pid == 0)
-		child_process_exec(path, args, envp);
+		child_process_exec(path, args, envp, redirs);
 	waitpid(pid, &status, 0);
 	free(path);
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (1);
+}
+
+int	execute_external_command(char **args, char **envp, t_data *data,
+	t_redir *redirs)
+{
+	char	*path;
+
+	path = find_command_path(args[0], data);
+	if (!path)
+	{
+		ft_putstr_fd("minishell: command not found: ", 2);
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd("\n", 2);
+		return (127);
+	}
+	return (fork_and_execute(path, args, envp, redirs));
 }

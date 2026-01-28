@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sig_handlers.c                                     :+:      :+:    :+:   */
+/*   builtin_echo.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/24 17:38:17 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:49:30 by muhakhan         ###   ########.fr       */
+/*   Created: 2026/01/26 22:03:26 by okhan             #+#    #+#             */
+/*   Updated: 2026/01/27 17:33:53 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	handle_sigint(void *context)
+int	builtin_echo(char **args)
 {
-	(void)context;
-	printf("\nMeow");
-	return ;
-}
+	int	i;
+	int	n_flag;
 
-void	handle_sigquit(void *context)
-{
-	(void)context;
-	printf("\nMeow");
-	return ;
-}
-
-void	sig_handler(int signum, siginfo_t *info, void *context)
-{
-	(void)context;
-	(void)info;
-	if (signum == SIGINT)
-		handle_sigint(NULL);
-	else if (signum == SIGQUIT)
-		handle_sigquit(NULL);
+	n_flag = 0;
+	i = 1;
+	if (args[i] && ft_strcmp(args[i], "-n") == 0)
+	{
+		n_flag = 1;
+		i++;
+	}
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], 1);
+		if (args[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
+	}
+	if (!n_flag)
+		ft_putstr_fd("\n", 1);
+	return (0);
 }

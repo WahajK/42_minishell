@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:58 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 17:48:56 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 18:08:19 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,40 @@ char	*get_env_value(t_data *data, char *key)
 		current = current->next;
 	}
 	return (NULL);
+}
+
+void	update_env(t_data *data, char *key, char *value)
+{
+	t_env	*current;
+	t_env	*new_node;
+
+	if (!data || !key)
+		return ;
+	current = data->env_list;
+	while (current)
+	{
+		if (ft_strcmp(current->key, key) == 0)
+		{
+			free(current->value);
+			current->value = ft_strdup(value);
+			return ;
+		}
+		current = current->next;
+	}
+	new_node = ft_new_env_node(key, value);
+	if (new_node)
+	{
+		new_node->next = data->env_list;
+		data->env_list = new_node;
+	}
+}
+
+void	init_shell_data(t_data *data, char **envp)
+{
+	data->env_list = init_env(envp);
+	data->user_input = NULL;
+	data->last_exit_code = 0;
+	data->working_dir = getcwd(NULL, CWD_BUFFER_SIZE);
+	if (!data->working_dir)
+		clean_exit(1, "getcwd failed");
 }

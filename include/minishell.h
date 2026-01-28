@@ -6,13 +6,14 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/24 22:46:21 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/27 20:38:36 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define HISTORY_FILE "test.txt"
+# define HISTORY_FILE ".minishell_history"
+# define CWD_BUFFER_SIZE 1024
 
 # include "../libft/libft.h"
 # include <stdio.h>
@@ -63,10 +64,19 @@ typedef enum e_redir_type
 	REDIR_HEREDOC
 }	t_redir_type;
 
+typedef struct s_pipe_ctx
+{
+	int		pipe_fds[2];
+	int		prev_fd;
+	char	**envp;
+	pid_t	last_pid;
+}	t_pipe_ctx;
+
 typedef struct s_redir
 {
 	char			*file;
 	t_redir_type	type;
+	int				expand;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -86,11 +96,10 @@ typedef struct s_command
 
 typedef struct s_env
 {
-	char	*key;
-	char	*value;
-	struct	s_env	*next;
+	char			*key;
+	char			*value;
+	struct s_env	*next;
 }	t_env;
-
 
 typedef struct s_data
 {
@@ -98,49 +107,48 @@ typedef struct s_data
 	char			*user_input;
 	int				last_exit_code;
 	char			*working_dir;
+	t_command		*current_commands;
 }	t_data;
 
-#define CWD_BUFFER_SIZE 1024
-
-// #builtins
-
 int			my_pwd(char **args);
+int			builtin_echo(char **args);
+int			builtin_cd(char **args, t_data *data);
 int			builtin_env(char **args, t_data *data);
 int			builtin_exit(char **args, t_data *data);
-
-// #env
+int			builtin_export(char **args, t_data *data);
+int			builtin_unset(char **args, t_data *data);
 t_env		*init_env(char **envp);
 char		*get_env_value(t_data *data, char *key);
-
-//#utils
+void		update_env(t_data *data, char *key, char *value);
+char		**env_list_to_envp(t_env *env_list);
 int			is_numeric(char *str);
 void		free_env_list(t_env *head);
 void		free_shell_data(t_data *data);
 void		ft_free_split(char **split);
-
-// #execution
 int			execute_builtin(char **args, t_data *data);
-char		*find_commadnd_path(char *cmd, t_data *data);
-int			execute_external_command(char **args, char **envp, t_data *data);
-
-// #parser
+int			execute_command(t_command *cmd, t_data *data);
+int			execute_pipeline(t_command *commands, t_data *data);
+int			apply_redirections(t_redir *redirs);
+char		*find_command_path(char *cmd, t_data *data);
+int			execute_external_command(char **args, char **envp, t_data *data,
+				t_redir *redirs);
+char		*ft_strndup(const char *s, size_t n);
 char		*skip_whitespaces(char *input);
 t_token		*lexer(char *input);
-int			parse_loop(void);
-t_command	*parse_input(char *input);
-t_command	*parse_simple_command(t_token **tokens);
+int			parse_loop(t_data *data);
+int			parse_input(char *input, t_data *data, t_command **out);
+t_command	*parse_simple_command(t_token **tokens, t_data *data);
 t_redir		*parse_redirections(t_token **tokens);
 int			check_syntax_errors(t_token *tokens);
 char		*remove_quotes(char *str);
+char		*expand_variables(char *str, t_data *data);
 void		free_token_list(t_token *head);
 void		free_redir_list(t_redir *head);
 void		free_command(t_command *cmd);
 void		free_command_list(t_command *head);
-
-// #signals
+void		prepare_heredocs(t_command *cmds, t_data *data);
+void		cleanup_heredocs(t_command *cmds);
 void		init_signals(void);
-void		sig_handler(int signum, siginfo_t *info, void *context);
+void		handle_sigint(int sig);
 void		clean_exit(int stage, char *msg);
-void		handle_sigquit(void *context);
-void		handle_sigint(void *context);
 #endif

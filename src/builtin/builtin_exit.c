@@ -3,69 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:33 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 17:11:22 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/27 20:44:21 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static long	ft_atol(char *str)
-{
-	long long	result;
-	int			sign;
-	int			i;
-
-	result = 0;
-	sign = 1;
-	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
-
-static	void	print_exit_numeric_error(char *arg)
+static void	print_exit_numeric_error(char *arg)
 {
 	fprintf(stderr, "minishell: exit: %s: "
 		"numeric argument required\n", arg);
 }
 
-int	builtin_exit(char **args, t_data *data)
+static int	get_arg_count(char **args)
 {
-	int			arg_count;
-	long long	exit_code;
+	int	count;
 
-	arg_count = 0;
-	while (args[arg_count])
-		arg_count++;
-	if (arg_count == 1)
-	{
-		free_shell_data(data);
-		exit(data->last_exit_code);
-	}
-	if (!is_numeric(args[1]))
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
+}
+
+static void	cleanup_and_exit(t_data *data, int exit_code)
+{
+	if (data->current_commands)
+		free_command_list(data->current_commands);
+	free_shell_data(data);
+	exit(exit_code);
+}
+
+static int	process_exit_args(int argc, char **args, t_data *data)
+{
+	long	exit_code;
+	int		error;
+
+	error = 0;
+	if (argc == 1)
+		cleanup_and_exit(data, data->last_exit_code);
+	exit_code = ft_atol(args[1], &error);
+	if (error || !is_numeric(args[1]))
 	{
 		print_exit_numeric_error(args[1]);
-		free_shell_data(data);
-		exit(255);
+		cleanup_and_exit(data, 255);
 	}
-	if (arg_count > 2)
+	if (argc > 2)
 	{
 		fprintf(stderr, "minishell: exit: too many arguments\n");
 		return (1);
 	}
-	exit_code = ft_atol(args[1]);
-	exit((int)(exit_code % 256));
+	cleanup_and_exit(data, (unsigned char)exit_code);
 	return (0);
+}
+
+int	builtin_exit(char **args, t_data *data)
+{
+	int	argc;
+
+	argc = get_arg_count(args);
+	return (process_exit_args(argc, args, data));
 }

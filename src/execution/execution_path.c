@@ -6,7 +6,7 @@
 /*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:24:20 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 18:14:16 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/26 23:11:33 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static	char	*check_path_segment(char *dir, char *cmd)
 	return (NULL);
 }
 
-char	*find_commadnd_path(char *cmd, t_data *data)
+char	*find_command_path(char *cmd, t_data *data)
 {
 	char	*path_env;
 	char	**dirs;
