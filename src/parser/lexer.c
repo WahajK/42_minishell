@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 16:58:34 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 00:13:48 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,6 @@ t_token	*process_token(char *input, int *len)
 	{
 		value = extract_operator(input, len);
 		token = create_token(value, get_operator_type(value));
-	}
-	else if (input[0] == '\'' || input[0] == '"')
-	{
-		value = extract_quoted_word(input, len);
-		token = create_token(value, TOK_WORD);
 	}
 	else
 	{

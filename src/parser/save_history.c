@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 20:48:15 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:57:23 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 00:17:49 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void	process_quoted_in_word(char *input, int *i, char *word, int *j)
 	char	quote;
 
 	quote = input[*i];
-	(*i)++;
+	word[(*j)++] = input[(*i)++];
 	while (input[*i] && input[*i] != quote)
 		word[(*j)++] = input[(*i)++];
 	if (input[*i] == quote)
-		(*i)++;
+		word[(*j)++] = input[(*i)++];
 }

@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 16:53:30 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 00:17:11 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,42 @@ static int	handle_dollar(char *str, int *i, t_data *data, char **res)
 	return (handle_dollar_env(str, i, data, res));
 }
 
+static int	process_single_quote(char *str, int *i, char **res)
+{
+	(*i)++;
+	while (str[*i] && str[*i] != '\'')
+	{
+		if (!append_char(res, str[*i]))
+			return (0);
+		(*i)++;
+	}
+	if (str[*i] == '\'')
+		(*i)++;
+	return (1);
+}
+
+static int	process_double_quote(char *str, int *i, t_data *data, char **res)
+{
+	(*i)++;
+	while (str[*i] && str[*i] != '"')
+	{
+		if (str[*i] == '$')
+		{
+			if (!handle_dollar(str, i, data, res))
+				return (0);
+		}
+		else
+		{
+			if (!append_char(res, str[*i]))
+				return (0);
+			(*i)++;
+		}
+	}
+	if (str[*i] == '"')
+		(*i)++;
+	return (1);
+}
+
 char	*expand_variables(char *str, t_data *data)
 {
 	char	*res;
@@ -82,15 +118,27 @@ char	*expand_variables(char *str, t_data *data)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$')
+		if (str[i] == '\'')
+		{
+			if (!process_single_quote(str, &i, &res))
+				return (free(res), NULL);
+		}
+		else if (str[i] == '"')
+		{
+			if (!process_double_quote(str, &i, data, &res))
+				return (free(res), NULL);
+		}
+		else if (str[i] == '$')
 		{
 			if (!handle_dollar(str, &i, data, &res))
 				return (free(res), NULL);
-			continue ;
 		}
-		if (!append_char(&res, str[i]))
-			return (free(res), NULL);
-		i++;
+		else
+		{
+			if (!append_char(&res, str[i]))
+				return (free(res), NULL);
+			i++;
+		}
 	}
 	return (res);
 }

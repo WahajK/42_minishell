@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:48:15 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:06:31 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 00:29:09 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_env	*ft_new_env_node(char *key, char *value)
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
-	new->key = strdup(key);
-	new->value = strdup(value);
+	new->key = ft_strdup(key);
+	new->value = ft_strdup(value);
 	new->next = NULL;
 	if (!new->key || !new->value)
 	{
