@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:44:33 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 20:44:21 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 17:31:57 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int	process_exit_args(int argc, char **args, t_data *data)
 	if (error || !is_numeric(args[1]))
 	{
 		print_exit_numeric_error(args[1]);
-		cleanup_and_exit(data, 255);
+		cleanup_and_exit(data, 2);
 	}
 	if (argc > 2)
 	{

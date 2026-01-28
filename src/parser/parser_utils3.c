@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:52:27 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:04:37 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 17:29:23 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,54 @@ int	is_builtin_cmd(char *cmd)
 	return (0);
 }
 
+static int	is_real_word_end(char c)
+{
+	return (is_operator(c) || c == ' ' || c == '\t');
+}
+
+static void	process_quoted_in_word(char *input, int *i, char *word, int *j)
+{
+	char	quote;
+
+	quote = input[*i];
+	(*i)++;
+	while (input[*i] && input[*i] != quote)
+		word[(*j)++] = input[(*i)++];
+	if (input[*i] == quote)
+		(*i)++;
+}
+
+static void	process_backslash_in_word(char *input, int *i, char *word, int *j)
+{
+	if (input[*i] == '\\' && input[*i + 1])
+	{
+		word[(*j)++] = input[*i + 1];
+		*i += 2;
+	}
+	else
+		word[(*j)++] = input[(*i)++];
+}
+
 char	*extract_word(char *input, int *len)
 {
 	int		i;
 	int		j;
+	int		word_len;
 	char	*word;
 
 	i = 0;
 	j = 0;
-	word = malloc(sizeof(char) * (ft_strlen(input) + 1));
+	word_len = ft_strlen(input) + 1;
+	word = malloc(sizeof(char) * word_len);
 	if (!word)
 		return (NULL);
-	while (input[i] && process_word_char(input, &i, word, &j))
-		;
+	while (input[i] && !is_real_word_end(input[i]))
+	{
+		if (input[i] == '\'' || input[i] == '"')
+			process_quoted_in_word(input, &i, word, &j);
+		else
+			process_backslash_in_word(input, &i, word, &j);
+	}
 	word[j] = '\0';
 	*len = i;
 	return (word);

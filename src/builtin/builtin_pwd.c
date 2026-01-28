@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_pwd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 15:26:59 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/23 16:58:55 by okhan            ###   ########.fr       */
+/*   Updated: 2026/01/28 17:23:31 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,7 @@ int	my_pwd(char **args)
 {
 	char	cwd[CWD_BUFFER_SIZE];
 
-	if (args[1] != NULL)
-	{
-		fprintf(stderr, "minishell: pwd. Too many arguments!\n");
-		return (1);
-	}
+	(void)args;
 	if (getcwd(cwd, CWD_BUFFER_SIZE) != NULL)
 	{
 		printf("%s\n", cwd);

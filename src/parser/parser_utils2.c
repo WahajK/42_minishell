@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/28 16:47:05 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 16:49:31 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 17:25:16 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,38 @@ int	count_args(t_token *tokens)
 	return (count);
 }
 
+static void	process_quoted_section(char *str, int *i, char *result, int *j)
+{
+	char	quote;
+
+	quote = str[*i];
+	(*i)++;
+	while (str[*i] && str[*i] != quote)
+		result[(*j)++] = str[(*i)++];
+	if (str[*i] == quote)
+		(*i)++;
+}
+
 char	*remove_quotes(char *str)
 {
 	char	*result;
-	char	quote;
 	int		i;
 	int		j;
 
-	if (!str || (str[0] != '\'' && str[0] != '"'))
+	if (!str)
 		return (ft_strdup(str));
-	quote = str[0];
-	i = 1;
-	j = 0;
-	while (str[i] && str[i] != quote)
-		i++;
-	result = malloc(sizeof(char) * i);
+	result = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	if (!result)
 		return (NULL);
-	i = 1;
-	while (str[i] && str[i] != quote)
-		result[j++] = str[i++];
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			process_quoted_section(str, &i, result, &j);
+		else
+			result[j++] = str[i++];
+	}
 	result[j] = '\0';
 	return (result);
 }

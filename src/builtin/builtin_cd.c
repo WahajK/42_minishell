@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/26 22:01:31 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 20:32:13 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 17:23:40 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,11 @@ int	builtin_cd(char **args, t_data *data)
 	char	*path;
 	int		print_oldpwd;
 
+	if (args[1] && args[2])
+	{
+		fprintf(stderr, "minishell: cd: too many arguments\n");
+		return (1);
+	}
 	print_oldpwd = args[1] && ft_strcmp(args[1], "-") == 0;
 	if (print_oldpwd)
 	{
