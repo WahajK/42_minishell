@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 15:01:57 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/27 18:47:53 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/28 21:22:03 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,36 @@ int	execute_builtin(char **args, t_data *data)
 	return (1);
 }
 
+static int	exec_redir_only(t_redir *redirs)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == -1)
+		return (perror("fork"), 1);
+	if (pid == 0)
+	{
+		if (apply_redirections(redirs) == -1)
+			exit(1);
+		exit(0);
+	}
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (1);
+}
+
 int	execute_command(t_command *cmd, t_data *data)
 {
-	if (!cmd || !cmd->args || !cmd->args[0])
+	if (!cmd)
 		return (0);
+	if (!cmd->args || !cmd->args[0])
+	{
+		if (cmd->redirs)
+			return (exec_redir_only(cmd->redirs));
+		return (0);
+	}
 	if (cmd->is_builtin)
 		return (exec_builtin_with_redirs(cmd, data));
 	return (exec_external_with_env(cmd, data));

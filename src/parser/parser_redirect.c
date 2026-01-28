@@ -6,7 +6,7 @@
 /*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/24 00:00:00 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:00:00 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 00:02:43 by muhakhan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,15 @@ t_redir	*parse_redirections(t_token **tokens)
 	t_redir			*head;
 
 	head = NULL;
-	while (is_redir_token(*tokens))
+	while (*tokens && ((*tokens)->type == TOK_WORD || is_redir_token(*tokens)))
 	{
-		if (consume_one_redir(tokens, &head) < 0)
-			return (free_redir_list(head), NULL);
+		if (is_redir_token(*tokens))
+		{
+			if (consume_one_redir(tokens, &head) < 0)
+				return (free_redir_list(head), NULL);
+		}
+		else
+			*tokens = (*tokens)->next;
 	}
 	return (head);
 }
