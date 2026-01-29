@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_process.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/18 14:48:04 by okhan             #+#    #+#             */
-/*   Updated: 2026/01/29 00:25:07 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 01:52:54 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,40 @@ static int	fork_and_execute(char *path, char **args, char **envp,
 	return (1);
 }
 
+static int	handle_direct_exec_error(char *arg)
+{
+	struct stat	path_stat;
+
+	if (stat(arg, &path_stat) == 0)
+	{
+		if (S_ISDIR(path_stat.st_mode))
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(arg, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			return (126);
+		}
+		if (access(arg, X_OK) != 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(arg, 2);
+			ft_putstr_fd(": Permission denied\n", 2);
+			return (126);
+		}
+		return (0);
+	}
+	ft_putstr_fd("minishell: command not found: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd("\n", 2);
+	return (127);
+}
+
 int	execute_external_command(char **args, char **envp, t_data *data,
 	t_redir *redirs)
 {
-	char			*path;
-	struct stat		path_stat;
-	int				i;
+	char	*path;
+	int		i;
+	int		err;
 
 	i = 0;
 	while (args[i] && args[i][0] == '\0')
@@ -62,34 +90,14 @@ int	execute_external_command(char **args, char **envp, t_data *data,
 	if (!path)
 	{
 		if (ft_strchr(args[i], '/'))
-		{
-			if (stat(args[i], &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(args[i], 2);
-				ft_putstr_fd(": Is a directory\n", 2);
-				return (126);
-			}
-			if (access(args[i], F_OK) == 0)
-			{
-				ft_putstr_fd("minishell: ", 2);
-				ft_putstr_fd(args[i], 2);
-				ft_putstr_fd(": Permission denied\n", 2);
-				return (126);
-			}
-		}
+			return (handle_direct_exec_error(args[i]));
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putstr_fd(args[i], 2);
 		ft_putstr_fd("\n", 2);
 		return (127);
 	}
-	if (stat(path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode))
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(args[i], 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-		free(path);
-		return (126);
-	}
+	err = handle_direct_exec_error(path);
+	if (err != 0)
+		return (free(path), err);
 	return (fork_and_execute(path, args + i, envp, redirs));
 }
