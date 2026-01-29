@@ -11,6 +11,8 @@ SRCS = src/main.c \
 	   src/parser/parser_utils2.c \
 	   src/parser/parser_utils3.c \
        src/parser/parser_expand.c \
+	   src/parser/parser_expand_dollar.c \
+	   src/parser/parser_expand_quotes.c \
 	   src/parser/lexer_helper_methods.c \
        src/builtin/builtin_cd.c \
        src/builtin/builtin_echo.c \
@@ -21,9 +23,11 @@ SRCS = src/main.c \
        src/builtin/builtin_unset.c \
        src/env/env_init.c \
 	   src/env/env_utils.c \
+	   src/execution/exec_builtin.c \
        src/execution/exec_dispatch.c \
        src/execution/execution_envp.c \
        src/execution/execution_path.c \
+	   src/execution/execution_exec_child.c \
        src/execution/execution_pipeline.c \
        src/execution/execution_process.c \
        src/execution/execution_redir.c \

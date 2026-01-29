@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: muhakhan <muhakhan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: okhan <okhan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 17:32:12 by muhakhan          #+#    #+#             */
-/*   Updated: 2026/01/28 17:58:03 by muhakhan         ###   ########.fr       */
+/*   Updated: 2026/01/29 01:28:52 by okhan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ int				consume_one_redir(t_token **tokens, t_redir **head);
 int				append_str(char **result, const char *add);
 int				append_char(char **result, char c);
 int				execute_builtin(char **args, t_data *data);
+int				exec_builtin_with_redirs(t_command *cmd, t_data *data);
 int				execute_command(t_command *cmd, t_data *data);
 int				execute_pipeline(t_command *commands, t_data *data);
 int				apply_redirections(t_redir *redirs);
@@ -158,6 +159,10 @@ int				check_syntax_errors(t_token *tokens);
 char			*remove_quotes(char *str);
 int				is_real_word_end(char c);
 void			process_quoted_in_word(char *input, int *i, char *word, int *j);
+int				handle_dollar(char *str, int *i, t_data *data, char **res);
+int				process_single_quote(char *str, int *i, char **res);
+int				process_double_quote(char *str, int *i, t_data *data,
+					char **res);
 char			*expand_variables(char *str, t_data *data);
 void			free_token_list(t_token *head);
 void			free_redir_list(t_redir *head);
@@ -172,6 +177,9 @@ void			clean_exit(int stage, char *msg);
 char			*get_history_path(void);
 void			save_command_to_history(const char *command);
 void			add_token_to_list(t_token **head, t_token *new_token);
+void			exec_child_command(t_command *cmd, t_data *data,
+					t_pipe_ctx *ctx);
 char			*extract_operator(char *input, int *len);
 int				should_end_word(char c);
+
 #endif
